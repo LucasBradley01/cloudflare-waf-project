@@ -13,12 +13,9 @@ app.use(function(req, res, next) {
 });
 
 // Initialze REST API
-app.get('/', (req, res) => {
-    //console.log(req);
-    res.status(200).sendFile(path.join(__dirname, './index.html'))
-});
-app.get('/animate.js', (req, res) => res.status(200).sendFile(path.join(__dirname, './animate.js')));
-app.get('/style.css', (req, res) => res.status(200).sendFile(path.join(__dirname, './style.css')));
+app.get('/', (req, res) => res.status(200).sendFile(path.join(__dirname, './frontend/index.html')));
+app.get('/animate.js', (req, res) => res.status(200).sendFile(path.join(__dirname, './frontend/animate.js')));
+app.get('/style.css', (req, res) => res.status(200).sendFile(path.join(__dirname, './frontend/style.css')));
 app.post('/login', async (req, res) => {
     
     // Get the data from the server api

@@ -30,6 +30,8 @@ app.post('/login', async (req, res) => {
 
     // Check if the response was successful
     if (jsonEventsResult.error) {
+        
+        // Only takes into account improperly formatted requestIds
         res.status(400).send(JSON.stringify({
             result: 400,
             description: jsonEventsResult.error.message,
@@ -39,6 +41,7 @@ app.post('/login', async (req, res) => {
     }
 
     // Check if the visitorId they give matches the visitorId returned by the server api
+    // This is done to avoid spoofing, wouldn't be necessary if using webhooks
     if (jsonEventsResult.products.identification.data.visitorId !== req.body.visitorId) {
         res.status(400).send(JSON.stringify({
             result: 400,
@@ -74,6 +77,8 @@ app.post('/login', async (req, res) => {
 
     // Check if the filters were successfully created
     if (rawCreateFilterResult.status !== 200) {
+        
+        // 10102 means that filter already exists, in which case the bot is already blocked
         if (jsonCreateFilterResult.errors[0].code === 10102) {
             res.status(200).send(JSON.stringify({
                 result: 200,
@@ -83,6 +88,7 @@ app.post('/login', async (req, res) => {
             return;
         }
         
+        // Other errors are more generic
         res.status(500).send(JSON.stringify({
             result: 500,
             description: 'Internal server error',
@@ -91,7 +97,7 @@ app.post('/login', async (req, res) => {
         return;
     }
 
-    // Get the id of the newly created filters
+    // Use the id of the newly created filter to block HTTP traffic selected by it
     let rawCreateRuleResult = await fetch("https://api.cloudflare.com/client/v4/zones/28f4cfd3041c170b9613d52b51d6b47e/firewall/rules", {
         method: 'POST',
         headers: {
@@ -112,6 +118,8 @@ app.post('/login', async (req, res) => {
 
     // Check if the rule was successfully created
     if (rawCreateRuleResult.status !== 200) {                
+        
+        // If the rule creation failed, cleanup the filter
         let rawFilterDeleteResult = await fetch("https://api.cloudflare.com/client/v4/zones/28f4cfd3041c170b9613d52b51d6b47e/filters/" + jsonCreateFilterResult.result[0].id, {
             method: 'DELETE',
             headers: {
@@ -123,6 +131,7 @@ app.post('/login', async (req, res) => {
         });
         let jsonFilterDeleteResult = await rawFilterDeleteResult.json();
 
+        // Error was related to filter creation
         res.status(500).send(JSON.stringify({
             result: 500,
             description: 'Internal server error',
@@ -155,7 +164,6 @@ app.post('/login', async (req, res) => {
 
 });
 
-//const client = redis.createClient();
 const port = process.env.PORT || 3000;
 app.listen(port, (err) => {
     if (err) console.log(err);

@@ -23,12 +23,13 @@ In order use CloudFlare WAF API, first get permissions to read and edit the Zone
 ## Create a CloudFlare Token
 
 1. Go [here](https://dash.cloudflare.com/profile/api-tokens).
-2. Select the “Create Token” button.
-3. Select the “Create Customer Token” button.
+2. Select the `Create Token` button.
+3. Select the `Create Customer Token` button.
 4. In permissions add the following Rules.
     1. Zone, Firewall Services, Read.
     2. Zone, Firewall Services, Write.
-5. Select the “Continue to Summary” button.
+5. Select the `Continue to Summary` button.
+6. Select the `Create Token` button.
 
 ## Create a WAF Filter
 A CloudFlare WAF Filter requires an expressions. In this case you can create the expressions “ip.src eq <bot IP>” where <bot IP> is the IP extracted from the Server API event data. More information on creating a CloudFlare WAF Filter can be found [here](https://developers.cloudflare.com/firewall/api/cf-filters/post/).

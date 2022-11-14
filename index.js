@@ -132,16 +132,16 @@ app.post('/login', async (req, res) => {
         return;
     }
 
+    // The "login" request was successful
     res.status(200).send(JSON.stringify({
         result: 200,
         description: 'Bot blocked'
     }));
 
-    console.log('**** CREATE RESULT ****')
-    console.log(jsonCreateRuleResult);
-
+    // Wait for a minute to delete the rule. For PoC purposes only
     await new Promise(resolve => setTimeout(resolve, 60000));
 
+    // The follow parameeter ensures the filter is deleted with the rule: ?delete_filter_if_unused=true
     let rawDeleteResult = await fetch("https://api.cloudflare.com/client/v4/zones/28f4cfd3041c170b9613d52b51d6b47e/firewall/rules/" + jsonCreateRuleResult.result[0].id + "?delete_filter_if_unused=true", {
         method: 'DELETE',
         headers: {
@@ -152,9 +152,6 @@ app.post('/login', async (req, res) => {
         redirect: 'follow'
     });
     let jsonDeleteResult = await rawDeleteResult.json();
-
-    console.log('**** DELETE RESULT ****')
-    console.log(jsonDeleteResult);
 
 });
 

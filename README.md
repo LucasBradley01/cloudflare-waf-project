@@ -12,7 +12,7 @@ The source code for the backend which uses CloudFlare WAF to block bots is in `i
 
 ## Ingest Event Data
 
-There are two ways to ingest the event data to block unwanted bots. The recommended way is using [web hooks](https://dev.fingerprint.com/docs/webhooks. Alternatively the requestId can be sent to the backend and then the event data can be accessed using [Fingerprint Server API](https://dev.fingerprint.com/docs/server-api).
+There are two ways to ingest the event data to block unwanted bots. The recommended way is using [web hooks](https://dev.fingerprint.com/docs/webhooks). Alternatively the requestId can be sent to the backend and then the event data can be accessed using [Fingerprint Server API](https://dev.fingerprint.com/docs/server-api).
 
 Once you have the event data, you can check the botd, data, bot, result field to determine if the visitor is an unwanted bot. The IP is extracted from the botd, data, ip field and used in the WAF Rule.
 

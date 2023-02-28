@@ -6,13 +6,13 @@ The article for this project can be found in Notion [here](https://www.notion.so
 
 ## Notes on Implementation
 
-The source code for the backend which uses CloudFlare WAF to block bots is in `index.js`. Currently, data is ingested using a POST command at the route `/login`. However, it would be better to use a webhook.
+The source code for the backend which uses CloudFlare WAF to block bots is in `index.js`. Currently, data is ingested using a POST command at the route `/login`.
 
 # Basic Backend Process
 
 ## Ingest Event Data
 
-There are two ways to ingest the event data to block unwanted bots. The recommended way is using [web hooks](https://dev.fingerprint.com/docs/webhooks). Alternatively the requestId can be sent to the backend and then the event data can be accessed using [Fingerprint Server API](https://dev.fingerprint.com/docs/server-api).
+The requestId can be sent to the backend and then the event data can be accessed using [Fingerprint Server API](https://dev.fingerprint.com/docs/server-api).
 
 Once you have the event data, you can check the botd, data, bot, result field to determine if the visitor is an unwanted bot. The IP is extracted from the botd, data, ip field and used in the WAF Rule.
 
